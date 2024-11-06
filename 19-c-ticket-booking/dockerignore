@@ -1,0 +1,4 @@
+# Ignore these files and folders
+.git
+node_modules
+/tmp

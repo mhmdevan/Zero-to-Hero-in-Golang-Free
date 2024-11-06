@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ticket-booking-app
+  labels:
+    app: ticket-booking-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ticket-booking-app
+  template:
+    metadata:
+      labels:
+        app: ticket-booking-app
+    spec:
+      containers:
+      - name: ticket-booking-app
+        image: ticket-booking-app:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: STRIPE_SECRET_KEY
+          value: "your_stripe_secret_key"  # Replace with your actual Stripe secret key
+        - name: DB_HOST
+          value: "mysql"
+        - name: DB_PORT
+          value: "3306"
+        - name: DB_USER
+          value: "appuser"
+        - name: DB_PASSWORD
+          value: "apppassword"
+        - name: DB_NAME
+          value: "ticket_booking_db"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ticket-booking-service
+spec:
+  selector:
+    app: ticket-booking-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer
